@@ -6,7 +6,7 @@ simpler.  It is a single short c file with no build
 dependencies other than a c compiler and stdio.h.
 
 It is as fork of Dieter Schoppitsch's minimalistic editor,
-[ATTO](https://github.com/EvansWinner/atto_line_editor), see
+ATTO (https://github.com/EvansWinner/atto_line_editor), see
 which for some more detail.
 
 
@@ -15,7 +15,7 @@ Install
 
 At the moment, build with something like
 
-     gcc -Wall -o buup buup.c
+     gcc -Wall -s -O3 -o buup buup.c
 
 
 Use

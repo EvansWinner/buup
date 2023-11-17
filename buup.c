@@ -1,8 +1,10 @@
 /*
 
-Atto is a simple, fast (doesn't need ncurses) and small (<16k) line editor.
-Nevertheless it provides features like a buffer, search&replace,
-an ascii table and a simple hex dumper.
+buup is a simple and tiny line editor. It is a fork of ATTO. It should have come
+with a README. See that file for more information.
+
+Nevertheless it provides a buffer, search & replace, and basic insert,
+change, append, save, and load functions.
 
 Two things are tricky:
 * It's not possible to edit a line directly. Instead the line is printed
@@ -13,16 +15,6 @@ Two things are tricky:
   - A 's' in this string splits the line.
 * Inserting new line(s) after the actual line (command 'i') could be
   ended with a '.' in a line itself.
-
-Homepage of Atto: http://web.uta4you.at/shop/atto/index.htm
-(c) December/2002 by Dieter Schoppitsch (shop@uta4you.at).
-
-PS: Get some further help by pressing "h" after starting the program.
-
-PPPS:  compile with:  gcc -Wall -s -O3 a.c
-
-I wrote atto as reminiscence to my first programming lesson 1981 on
-a honeywell bull host.
 
 */
 
@@ -61,27 +53,6 @@ int pmax() // calculate size and max. pointer
 {long int i=0;
  while(buf[i]!=EOF && i<BUFSIZE) i++;
  return i;
-}
-
-void ascii() // print ascii table
-{
-puts("               0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F");
-puts("0000  0 0   0 NL SH SX EX ET EQ AK BL BS HT LF VT FF CR SO SI");
-puts("0001  1 1  16 DL D1 D2 D3 D4 NK SN EB CN EM SB ES FS GS RS US");
-puts("0010  2 2  32 SP  !  \"  #  $  %  &  '  (  )  *  +  ,  -  .  /");
-puts("0011  3 3  48  0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?");
-puts("0100  4 4  64  @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O");
-puts("0101  5 5  80  P  Q  R  S  T  U  V  W  X  Y  Z  [  \\  ]  ^  _");
-puts("0110  6 6  96  `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o");
-puts("0111  7 7 112  p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~ DL");
-puts("1000  8 8 128    ‚ƒ„:x");
-puts("1001  9 9 144");
-puts("1010 10 A 160");
-puts("1011 11 B 176");
-puts("1100 12 C 192");
-puts("1101 13 D 208");
-puts("1110 14 E 224");
-puts("1111 15 F 240");
 }
 
 void printtab() //print tabulator ruler
@@ -279,21 +250,6 @@ void replace() // replace all
  p=pt; printf("%d items replaced\n",count);
 }
 
-void puthex(char c) // putchar c in hex
-{if(c>9) putchar('A'-10+c); else putchar('0'+c);}
-
-void dump(int n) // hexdump from line n on
-{long int pt=0,max=pmax(); char c;
- while(n-1 && pt<max) if(buf[pt++]=='\n') n--;
- for(n=0;n<DUMPLEN && pt+n<=max;n++)
- {c=buf[pt+n];
-  puthex((c>>4)&0xF); puthex(c&0xF);
-  if(c>=' ') putchar(c); else putchar('?');
-  putchar(' ');
- }
- putchar(ENTER);
-}
-
 void main(int argc, char *argv[]) /* MAIN */
 {char n; int i=0,loop=1;
 
@@ -312,7 +268,6 @@ void main(int argc, char *argv[]) /* MAIN */
    case SPACE: next(1); list(1); i=0; break;
    case '+': if(!i) i=1; next(i); i=0; break; // next line
    case '-': if(!i) i=1; prev(i); i=0; break; // prev line
-   case 'a': ascii(); i=0; break; // ascii table
    case 'b': if(!i) i=1; listback(i); i=0; break; // list back
    case 'c': if(!i) i=1; copy(i); i=0; break; // copy to buffer
    case 'd': if(!i) i=1; delete(i); i=0; break; // delete line
@@ -332,7 +287,6 @@ void main(int argc, char *argv[]) /* MAIN */
    case 'v': savebuf(); i=0; break; // write file
    case 'w': save(); i=0; break; // write file
    case 'x': if(save()==1) {system("stty icanon echo"); loop=0;} break; // exit
-   case 'y': if(!i) i=1; dump(i); i=0; break;
 
    case 'z': putchar(i); i=0; break;
    default: i=0;
@@ -340,8 +294,3 @@ void main(int argc, char *argv[]) /* MAIN */
  system("stty icanon echo");
 }
 
-/* IDEAS:
-
-*
-
-*/
