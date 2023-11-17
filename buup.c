@@ -26,18 +26,18 @@ Inserting new line(s) after the actual line (command 'i') could be ended with a
 #define STRINGSIZE 1024 // max string length
 #define BUFSIZE 1048575 // max file size
 
-FILE *fil;
-char *filename;
+static FILE *fil;
+static char *filename;
 
-char buf [BUFSIZE];
-char tbuf [BUFSIZE]; // Temp buffer
+static char buf [BUFSIZE];
+static char tbuf [BUFSIZE]; // Temp buffer
 
-long int p = 0; // pointer, actual position
-long int ps = 0; // pointer for searching
-char ss [STRINGSIZE] = ""; // search string
+static long int p = 0; // pointer, actual position
+static long int ps = 0; // pointer for searching
+static char ss [STRINGSIZE] = ""; // search string
 
 // inputs string
-void getstring (char *s) {
+static void getstring (char *s) {
   char c, *st;
   st = s;
   while ((c = getchar()) != ENTER)
@@ -55,7 +55,7 @@ void getstring (char *s) {
 }
 
 // calculate size and max.pointer
-int pmax() {
+static int pmax() {
   long int i = 0;
   while (buf[i] != EOF && i < BUFSIZE) {
     i++;
@@ -63,10 +63,10 @@ int pmax() {
   return i;
 }
 
-void printtab() { puts("....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8"); }
+static void printtab() { puts("....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8"); }
 
 // shift buf from position p n times up
-void shiftup(int n) {
+static void shiftup(int n) {
   int long i;
   for (i = pmax(); i >= p; i--) {
     buf[i + n] = buf[i];
@@ -74,36 +74,15 @@ void shiftup(int n) {
 }
 
 // shift buf from position p n times down
-void shiftdown(int n) {
+static void shiftdown(int n) {
   int long i, maxn = pmax() - n;
   for (i = p; i <= maxn; i++) {
     buf[i] = buf[i + n];
   }
 }
 
-void help() {
-  puts("--------------------------------------------------------");
-  puts("ATTO, the simple line editor             usage: <a file>");
-  puts("Version 0.1         2002           by Dieter Schoppitsch");
-  puts("\nENTER ... print new line");
-  puts("SPACE ... goto/list next line");
-  puts("+     ... goto next line");
-  puts("-     ... goto previous line\n");
-  puts("Ascii Table         inFo                  Replace all");
-  puts("Backlist            Goto line             Search");
-  puts("Copy to buffer      Help                  print Tab");
-  puts("Delete line         Insert new line       saVe buffer as");
-  puts("Edit line           Join next line        Write file");
-  puts("  - Insert string   List line             eXit");
-  puts("  - Delete string   search Next           y ... hex dump");
-  puts("  - Change string   Open file to buffer");
-  puts("  - Split line      Paste buffer");
-  puts("\nType number before command to multiple.");
-  puts("--------------------------------------------------------");
-}
-
 //calculate line number
-int line(void) {
+static int line(void) {
   long int i, n = 1;
   for (i = 1; i <= p; i++)
     if (buf[i] == '\n') {
@@ -113,7 +92,7 @@ int line(void) {
 }
 
 // n lines backward
-void prev(int n) {
+static void prev(int n) {
   while (n + 1 && p)
     if (buf[p--] == '\n') {
       n--;
@@ -124,7 +103,7 @@ void prev(int n) {
 }
 
 // n lines forward
-void next(int n) {
+static void next(int n) {
   int long max = pmax();
   while (n && p < max)
     if (buf[p++] == '\n') {
@@ -132,10 +111,10 @@ void next(int n) {
     }
 }
 
-void gotoline(int n) {p=0; next(n-1);}
+static void gotoline(int n) {p=0; next(n-1);}
 
 // list actual n lines
-void list(int n) {
+static void list(int n) {
   long int pt = p, max = pmax();
   while (n && pt < max)
     if (putchar(buf[pt++]) == '\n') {
@@ -147,7 +126,7 @@ void list(int n) {
 }
 
 //lists from n lines back 2 * n lines
-void listback(int n) {
+static void listback(int n) {
   long int pt = p;
   prev(n + 1);
   list(2 * n + 1);
@@ -155,7 +134,7 @@ void listback(int n) {
 }
 
 // print some info
-void info() {
+static void info() {
   long int i, max = pmax();
   int lines = 0;
   for (i = 0; i <= max; i++)
@@ -165,7 +144,7 @@ void info() {
   printf("File %s with %ld bytes, line %d of %d\n", filename, i - 1, line(), lines);
 }
 
-void load() {
+static void load() {
   long int i = 0, pt = 0;
   if ((fil = fopen(filename, "r"))) {
     while ((buf[pt++] = getc(fil)) != EOF && i++ < BUFSIZE - 1);
@@ -177,7 +156,7 @@ void load() {
 }
 
 // load file to tbuffer
-void readbuf() {
+static void readbuf() {
   long int i = 0, pt = 0;
   char fnam [STRINGSIZE] = "";
   puts("read file:");
@@ -192,7 +171,7 @@ void readbuf() {
   }
 }
 
-int save() {
+static int save() {
   long int i = 0, pt = 0;
   if ((fil = fopen(filename, "w+"))) {
     while (buf[pt] != EOF && i++ < BUFSIZE - 1) {
@@ -208,7 +187,7 @@ int save() {
 }
 
 //save tbuffer as
-void savebuf() {
+static void savebuf() {
   long int i = 0, pt = 0;
   char fnam [STRINGSIZE] = "";
   puts("save as:");
@@ -225,7 +204,7 @@ void savebuf() {
 }
 
 // edit actual line
-void edit() {
+static void edit() {
   int i, j, len;
   long int pt = p;
   char s [STRINGSIZE] = "";
@@ -264,7 +243,7 @@ void edit() {
 }
 
 // insert next line(s) end with '.' in a line by itself
-void insert() {
+static void insert() {
   int i, len, loop = 1;
   char s [STRINGSIZE] = "";
   while (loop) {
@@ -285,7 +264,7 @@ void insert() {
 }
 
 // copy n lines to tbuffer
-long int copy(int n) {
+static long int copy(int n) {
   long int i, pt = p, max = pmax();
   while (n && pt < max)
     if (buf[pt++] == '\n') {
@@ -298,10 +277,10 @@ long int copy(int n) {
   return pt;
 }
 
-void delete (int n) {shiftdown(copy(n)-p);}
+static void delete (int n) {shiftdown(copy(n)-p);}
 
 // insert tbuffer before actual line
-void paste() {
+static void paste() {
   long int i, len = strlen(tbuf);
   shiftup(len);
   for (i = 0; i < len; i++) {
@@ -310,7 +289,7 @@ void paste() {
 }
 
 // join next line to actual line
-void joinline() {
+static void joinline() {
   long int pt = p;
   next(1);
   p--;
@@ -320,7 +299,7 @@ void joinline() {
   p = pt;
 }
 
-int search(char *s) {
+static int search(char *s) {
   //search s from pointer ps on
   int i, len = strlen(s), wrap = 0, loop = 1;
   long int count = 0, max = pmax();
@@ -353,7 +332,7 @@ int search(char *s) {
   return 0;
 }
 
-void searchstring() {
+static void searchstring() {
   puts("search for:");
   getstring(ss);
   ps = p;
@@ -362,10 +341,10 @@ void searchstring() {
   }
 }
 
-void searchnext() {search(ss);}
+static void searchnext() {search(ss);}
 
 // replace all
-void replace() {
+static void replace() {
   int i, count = 0;
   long int pt = p, max = pmax();
   char s [STRINGSIZE] = "", s1[STRINGSIZE] = "";
@@ -399,7 +378,8 @@ int main(int argc, char *argv[]) {
 
   buf[0] = EOF;
   if (argc < 2) {
-    help();
+   // help();
+   puts("bad bad bad");
   } else {
     filename = argv[1];
     load();
@@ -489,11 +469,6 @@ int main(int argc, char *argv[]) {
       i = 0;
       break;
     //goto line
-    case 'h':
-      help();
-      i = 0;
-      break;
-    //help
     case 'i':
       insert();
       i = 0;

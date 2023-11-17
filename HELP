@@ -1,0 +1,21 @@
+  boop, simple line editor             usage: <a file>
+
+  Version 0.1         2023             by Evans Winner
+  Based on ATTO, by Dieter Schoppitsch
+  
+  ENTER ... print new line
+  SPACE ... goto/list next line
++     ... goto next line
+-     ... goto previous line
+
+inFo                Replace all
+Backlist            Goto line             Search
+Copy to buffer      Help                  print Tab
+Delete line         Insert new line       saVe buffer as
+Edit line           Join next line        Write file
+  - Insert string   List line             eXit
+  - Delete string   search Next           y ... hex dump
+  - Change string   Open file to buffer
+  - Split line      Paste buffer
+
+Type number before command to multiple.
