@@ -22,9 +22,7 @@ Inserting new line(s) after the actual line (command 'i') could be ended with a
 #define BUFSIZE 1048575 // max file size
 
 static const char BS='\b';
-static const char SPACE=' ';
 static const char DELETE='\x7f';
-static const char ENTER='\n';
 static const char *RULER="....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8";
 
 static FILE *fil;
@@ -37,14 +35,17 @@ static long int p = 0; // pointer, actual position
 static long int ps = 0; // pointer for searching
 static char ss [STRINGSIZE] = ""; // search string
 
+static void fail() {exit(EXIT_FAILURE);}
+static int ctoi(int c){return c-'0';}
+
 // inputs string
 static void getstring (char *s) {
   char c, *st;
   st = s;
-  while ((c = getchar()) != ENTER)
+  while ((c = getchar()) != '\n')
     if (c == DELETE) {
       if (s == st) {
-        putchar(BS);
+        if (putchar(BS) != ctoi(BS)) fail();
         s--;
       }
     } else {
@@ -52,7 +53,7 @@ static void getstring (char *s) {
       putchar(c);
     }
   *s = '\0';
-  putchar(ENTER);
+  putchar('\n');
 }
 
 // calculate size and max pointer
@@ -122,7 +123,7 @@ static void list(int n) {
       n--;
     }
   if (pt == max && buf[pt - 1] != '\n') {
-    putchar(ENTER);
+    putchar('\n');
   }
 }
 
@@ -389,9 +390,9 @@ int main(int argc, char *argv[]) {
     case '8':
     case '9':
     case '0': i = 10 * i + (int)(n - '0'); break;
-    case ENTER: putchar(ENTER); i = 0; break;
-    case SPACE: next(1); list(1); i = 0; break;
-    case '+': if (!i) { i = 1; } next(i); i = 0; break; //next line
+    case '\n': putchar('\n'); i = 0; break;
+    case ' ': next(1); list(1); i = 0; break;
+    case '+': if (!i) {i = 1;} next(i); i = 0; break; //next line
     case '-':
       if (!i) {
         i = 1;
