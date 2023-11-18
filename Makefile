@@ -1,10 +1,11 @@
-CC=gcc
+CC=clang
+COPTS=--pedantic -Wall -Wextra
 
 .PHONY:all
 all:buup
 
 buup:buup.c
-	$(CC) -Wall -o buup buup.c
+	$(CC) $(COPTS) -o buup buup.c
 
 .PHONY:clean
 clean:
@@ -13,6 +14,7 @@ clean:
 .PHONY:lint
 lint:
 	splint buup.c
+	cppcheck --enable=all buup.c
 
 .PHONY:test
 test:
