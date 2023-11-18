@@ -1,11 +1,11 @@
 CC=clang
-COPTS=--pedantic -Wall -Wextra
+CCOPT=--pedantic -Wall -Wextra
 
 .PHONY:all
 all:buup
 
 buup:buup.c
-	$(CC) $(COPTS) -o buup buup.c
+	$(CC) $(CCOPT) -o buup buup.c
 
 .PHONY:clean
 clean:
