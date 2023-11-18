@@ -18,13 +18,14 @@ Inserting new line(s) after the actual line (command 'i') could be ended with a
 #include <stdio.h>
 #include <string.h>
 
-#define ESC 0x1B
-#define BS 0x8
-#define SPACE 0x20
-#define BACKSPACE 0x7F
-#define ENTER 0xa
 #define STRINGSIZE 1024 // max string length
 #define BUFSIZE 1048575 // max file size
+
+static const char BS='\b';
+static const char SPACE=' ';
+static const char DELETE='\x7f';
+static const char ENTER='\n';
+static const char *RULER="....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8";
 
 static FILE *fil;
 static char *filename;
@@ -41,8 +42,8 @@ static void getstring (char *s) {
   char c, *st;
   st = s;
   while ((c = getchar()) != ENTER)
-    if (c == BACKSPACE) {
-      if (s - st) {
+    if (c == DELETE) {
+      if (s == st) {
         putchar(BS);
         s--;
       }
@@ -54,7 +55,7 @@ static void getstring (char *s) {
   putchar(ENTER);
 }
 
-// calculate size and max.pointer
+// calculate size and max pointer
 static int pmax() {
   long int i = 0;
   while (buf[i] != EOF && i < BUFSIZE) {
@@ -63,7 +64,7 @@ static int pmax() {
   return i;
 }
 
-static void printtab() { puts("....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8"); }
+static void printtab(){puts(RULER);}
 
 // shift buf from position p n times up
 static void shiftup(int n) {
@@ -126,12 +127,7 @@ static void list(int n) {
 }
 
 //lists from n lines back 2 * n lines
-static void listback(int n) {
-  long int pt = p;
-  prev(n + 1);
-  list(2 * n + 1);
-  p = pt;
-}
+static void listback(int n){long int pt=p; prev(n+1); list(2*n+1); p=pt;}
 
 // print some info
 static void info() {
@@ -149,9 +145,9 @@ static void load() {
   if ((fil = fopen(filename, "r"))) {
     while ((buf[pt++] = getc(fil)) != EOF && i++ < BUFSIZE - 1);
     fclose(fil);
-    puts("file loaded");
+    puts("File loaded");
   } else {
-    puts("new file opened");
+    puts("New file opened");
   }
 }
 
@@ -277,7 +273,7 @@ static long int copy(int n) {
   return pt;
 }
 
-static void delete (int n) {shiftdown(copy(n)-p);}
+static void delete (int n){shiftdown(copy(n)-p);}
 
 // insert tbuffer before actual line
 static void paste() {
@@ -333,12 +329,8 @@ static int search(char *s) {
 }
 
 static void searchstring() {
-  puts("search for:");
-  getstring(ss);
-  ps = p;
-  if (search(ss) == 1) {
-    puts("string not found");
-  }
+  puts("search for:"); getstring(ss); ps = p;
+  if (search(ss) == 1) puts("String not found");
 }
 
 static void searchnext() {search(ss);}
@@ -377,10 +369,7 @@ int main(int argc, char *argv[]) {
   int i = 0, loop = 1;
 
   buf[0] = EOF;
-  if (argc < 2) {
-   // help();
-   puts("bad bad bad");
-  } else {
+  if (argc > 1) {
     filename = argv[1];
     load();
   }
@@ -399,26 +388,10 @@ int main(int argc, char *argv[]) {
     case '7':
     case '8':
     case '9':
-    case '0':
-      i = 10 * i + (int)(n - '0');
-      break;
-    case ENTER:
-      putchar(ENTER);
-      i = 0;
-      break;
-    case SPACE:
-      next(1);
-      list(1);
-      i = 0;
-      break;
-    case '+':
-      if (!i) {
-        i = 1;
-      }
-      next(i);
-      i = 0;
-      break;
-    //next line
+    case '0': i = 10 * i + (int)(n - '0'); break;
+    case ENTER: putchar(ENTER); i = 0; break;
+    case SPACE: next(1); list(1); i = 0; break;
+    case '+': if (!i) { i = 1; } next(i); i = 0; break; //next line
     case '-':
       if (!i) {
         i = 1;
@@ -451,16 +424,8 @@ int main(int argc, char *argv[]) {
       i = 0;
       break;
     //delete line
-    case 'e':
-      edit();
-      i = 0;
-      break;
-    //edit line
-    case 'f':
-      info();
-      i = 0;
-      break;
-    //info
+    case 'e': edit(); i = 0; break;
+    case 'f': info(); i = 0; break;
     case 'g':
       if (!i) {
         i = 1;
@@ -469,78 +434,20 @@ int main(int argc, char *argv[]) {
       i = 0;
       break;
     //goto line
-    case 'i':
-      insert();
-      i = 0;
-      break;
-    //insert new line
-    case 'j':
-      joinline();
-      i = 0;
-      break;
-    //join next line
-    case 'l':
-      if (!i) {
-        i = 1;
-      }
-      list(i);
-      i = 0;
-      break;
-    //list actual line
-    case 'n':
-      searchnext();
-      i = 0;
-      break;
-    //search next string
-    case 'o':
-      readbuf();
-      i = 0;
-      break;
-    //read file to buffer
-    case 'p':
-      paste();
-      i = 0;
-      break;
-    //paste buffer
-    case 'r':
-      replace();
-      i = 0;
-      break;
-    //search and replace all
-    case 's':
-      searchstring();
-      i = 0;
-      break;
-    //search string
-    case 't':
-      printtab();
-      i = 0;
-      break;
-    //print tabulator
-    case 'v':
-      savebuf();
-      i = 0;
-      break;
-    //write file
-    case 'w':
-      save();
-      i = 0;
-      break;
-    //write file
-    case 'x':
-      if (save() == 1) {
-        system("stty icanon echo");
-        loop = 0;
-      }
-      break;
-    //exit
-
-    case 'z':
-      putchar(i);
-      i = 0;
-      break;
-    default:
-      i = 0;
+    case 'i': insert(); i = 0; break;
+    case 'j': joinline(); i = 0; break;
+    case 'l': if (!i) { i = 1; } list(i); i = 0; break; //list actual line
+    case 'n': searchnext(); i = 0; break; //search next string
+    case 'o': readbuf(); i = 0; break; //read file to buffer
+    case 'p': paste(); i = 0; break; //paste buffer
+    case 'r': replace(); i = 0; break; //search and replace all
+    case 's': searchstring(); i = 0; break; //search string
+    case 't': printtab(); i = 0; break; //print tabulator
+    case 'v': savebuf(); i = 0; break; //write file
+    case 'w': save(); i = 0; break; //write file
+    case 'x': if (save() == 1) { system("stty icanon echo"); loop = 0; } break; //exit
+    case 'z': putchar(i); i = 0; break;
+    default: i = 0;
     }
   system("stty icanon echo");
 }
