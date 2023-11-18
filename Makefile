@@ -1,10 +1,19 @@
 CC=gcc
+
+.PHONY:all
+all:buup
+
 buup:buup.c
 	$(CC) -Wall -o buup buup.c
 
+.PHONY:clean
 clean:
 	rm buup
+
+.PHONY:lint
 lint:
 	splint buup.c
-format:
-	astyle -A2 -s2 --squeeze-ws -H -xh -xf -o -O -c buup.c	
+
+.PHONY:test
+test:
+	
