@@ -1,5 +1,5 @@
 CC=gcc
-buup:
+buup:buup.c
 	$(CC) -Wall -o buup buup.c
 
 clean:
