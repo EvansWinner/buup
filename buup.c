@@ -1,18 +1,4 @@
-/*
-buup is a simple and tiny line editor. It is a fork of ATTO. It should have
-come with a README. See that file for more information.
-
-Nevertheless it provides a buffer, search & replace, and basic insert, change,
-append, save, and load functions.
-
-Two things are tricky: It's not possible to edit a line directly. Instead the
-line is printed and an "edit string" will be read below. - Everything after an
-'i' in this string will be inserted in the line. - Everything after an 'd' in
-this string will be deleted in the line. - Everything after an 'c' in this
-string will be changed in the line. - A 's' in this string splits the line.
-Inserting new line(s) after the actual line (command 'i') could be ended with a
-'.' in a line itself.
-*/
+// buup.c --- simple and tiny line editor. It is a fork of ATTO.
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -146,9 +132,9 @@ static void load() {
   if ((fil = fopen(filename, "r"))) {
     while ((buf[pt++] = getc(fil)) != EOF && i++ < BUFSIZE - 1);
     fclose(fil);
-    puts("File loaded");
+    puts("File loaded.");
   } else {
-    puts("New file opened");
+    puts("New file opened.");
   }
 }
 
@@ -168,6 +154,23 @@ static void readbuf() {
   }
 }
 
+//save tbuffer as
+static void savebuf() {
+  long int i = 0, pt = 0;
+  char fnam [STRINGSIZE] = "";
+  fputs(": ",stdout);
+  getstring(fnam);
+  if ((fil = fopen(fnam, "w+"))) {
+    while (tbuf[pt] != '\0' && tbuf[pt] != EOF && i++ < BUFSIZE - 1) {
+      putc(tbuf[pt++], fil);
+    }
+    fclose(fil);
+    puts("Saved.");
+  } else {
+    puts("Save error");
+  }
+}
+
 static int save() {
   long int i = 0, pt = 0;
   if ((fil = fopen(filename, "w+"))) {
@@ -175,28 +178,11 @@ static int save() {
       putc(buf[pt++], fil);
     }
     fclose(fil);
-    puts("file saved");
+    puts("Saved.");
     return 1;
   } else {
-    puts("file saving error");
-    return -1;
-  }
-}
-
-//save tbuffer as
-static void savebuf() {
-  long int i = 0, pt = 0;
-  char fnam [STRINGSIZE] = "";
-  puts("save as:");
-  getstring(fnam);
-  if ((fil = fopen(fnam, "w+"))) {
-    while (tbuf[pt] != '\0' && tbuf[pt] != EOF && i++ < BUFSIZE - 1) {
-      putc(tbuf[pt++], fil);
-    }
-    fclose(fil);
-    puts("buffer saved");
-  } else {
-    puts("buffer saving error");
+    savebuf();
+    return 1;
   }
 }
 
@@ -308,7 +294,7 @@ static int search(char *s) {
     if (ps >= max && wrap == 0) {
       wrap = 1;
       ps = 0;
-      puts("wrapped");
+      puts("Wrapped.");
     }
     if (count >= max) {
       loop = 0;
@@ -321,7 +307,7 @@ static int search(char *s) {
       p = ps;
       prev(0);
       loop = 0;
-      puts("string found");
+      puts("Found.");
     }
     ps++;
     count++;
@@ -330,8 +316,8 @@ static int search(char *s) {
 }
 
 static void searchstring() {
-  puts("search for:"); getstring(ss); ps = p;
-  if (search(ss) == 1) puts("String not found");
+  fputs(": ",stdout); getstring(ss); ps = p;
+  if (search(ss) == 1) puts("Not found");
 }
 
 static void searchnext() {search(ss);}
@@ -446,9 +432,9 @@ int main(int argc, char *argv[]) {
     case 't': printtab(); i = 0; break; //print tabulator
     case 'v': savebuf(); i = 0; break; //write file
     case 'w': save(); i = 0; break; //write file
-    case 'x': if (save() == 1) { system("stty icanon echo"); loop = 0; } break; //exit
+  //  case 'x': if (save() == 1) { system("stty icanon echo"); loop = 0; } break; //exit
     case 'z': putchar(i); i = 0; break;
     default: i = 0;
     }
-  system("stty icanon echo");
+//  system("stty icanon echo");
 }

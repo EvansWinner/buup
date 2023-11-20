@@ -3,19 +3,33 @@
   Version 0.1         2023             by Evans Winner
   Based on ATTO, by Dieter Schoppitsch
   
-  ENTER ... print new line
-  SPACE ... goto/list next line
-+     ... goto next line
--     ... goto previous line
+ENTER	Print a blank line
+SPACE	Make the next line the current line and print it
++	Make the next line the current line 
+-	Make the previous line the current line
+f	Print some information about the current buffer
+t	Print a ruler     
+w	Write buffer to file. Prompt for filename if the buffer
+	is not already associated with a file.
+j	Concatenate the next line to the end of the current line, deleting
+	the next line and leaving the currently line as the current line.
 
-inFo                Replace all
+           Replace all
 Backlist            Goto line             Search
-Copy to buffer      Help                  print Tab
+Copy to buffer
 Delete line         Insert new line       saVe buffer as
-Edit line           Join next line        Write file
+Edit line    
   - Insert string   List line             eXit
-  - Delete string   search Next           y ... hex dump
+  - Delete string   search Next
   - Change string   Open file to buffer
   - Split line      Paste buffer
 
 Type number before command to multiple.
+
+Two things are tricky: It's not possible to edit a line directly. Instead the
+line is printed and an "edit string" will be read below. - Everything after an
+'i' in this string will be inserted in the line. - Everything after an 'd' in
+this string will be deleted in the line. - Everything after an 'c' in this
+string will be changed in the line. - A 's' in this string splits the line.
+Inserting new line(s) after the actual line (command 'i') could be ended with a
+'.' in a line itself.
