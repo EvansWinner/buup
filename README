@@ -1,13 +1,12 @@
 buup
 ====
 
-Buup is a line editor like ed(1) but much smaller and
-simpler.  It is a single short c file with no build
-dependencies other than a c compiler and stdio.h.
+Buup is a line editor like ed(1) but much smaller and simpler.  It is a single
+short c file with no build dependencies other than a c compiler and stdio.h.
 
-It is as fork of Dieter Schoppitsch's minimalistic editor,
-ATTO (https://github.com/EvansWinner/atto_line_editor), see
-which for some more detail.
+It is as fork of Dieter Schoppitsch's minimalistic editor, ATTO
+(https://github.com/EvansWinner/atto_line_editor), see which for some more
+detail.
 
 
 Install
@@ -17,20 +16,21 @@ At the moment, build with something like
 
      gcc -Wall -s -O3 -o buup buup.c
 
+Or you can use the makefile and just type
+
+     make
+
+This will build buup with clang and will also make the man(1) page using GNU
+groff. 
+
 
 Use
 ---
 
-Currently, see the bottom of the source file for a list of
-available commands. 
-
+Read the man page.
 
 To do
 -----
 
-- Remove the ascii chart and hexdump commands, as they are
-  somewhat orthogonal to what I want a text editor to do.
-- Help as a command line switch instead of an interactive
+- Help and version info as command line switches instead of an interactive
   function.
-- Portable makefile?
-- man page?

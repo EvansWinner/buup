@@ -10,12 +10,11 @@ buup \- tiny line editor
 .SH DESCRIPTION
 .B buup
 is a bare-bones line editor, somewhat in the spirit of ed(1).  It is based on
-ATTO, by Dieter Schoppitsch (which is itself not to be confused with the Moodle
-editor of the same name, nor with the Emacs clone of the same name). While it
-lacks the two arguably most powerful features of ed(1), namely regular
-expressions, and integration with the shell, it is extremely small, has no
-runtime dependencies and only requires a standard c compiler and library to
-build.
+ATTO, by Dieter Schoppitsch (which is not to be confused with the Moodle editor
+of the same name, nor with the Emacs clone of the same name). While it lacks
+the two arguably most powerful features of ed(1), namely regular expressions
+and integration with the shell, it is extremely small, has no runtime
+dependencies and only requires a standard c compiler and library to build.
 
 .SS Definitions and Introductory Notes
 In the following:

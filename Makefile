@@ -2,7 +2,7 @@ CC=clang
 CCOPT=--pedantic -Wall -Wextra
 
 .PHONY:all
-all:buup
+all:buup doc
 
 buup:buup.c
 	$(CC) $(CCOPT) -o buup buup.c
@@ -13,7 +13,7 @@ doc:
 
 .PHONY:clean
 clean:
-	rm buup buup.1
+	rm -f buup buup.1
 
 .PHONY:lint
 lint:
