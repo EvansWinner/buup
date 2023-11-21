@@ -7,9 +7,13 @@ all:buup
 buup:buup.c
 	$(CC) $(CCOPT) -o buup buup.c
 
+.PHONE:doc
+doc:
+	groff -Tascii -man buup.man>buup.1
+
 .PHONY:clean
 clean:
-	rm buup
+	rm buup buup.1
 
 .PHONY:lint
 lint:
