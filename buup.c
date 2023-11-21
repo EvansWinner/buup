@@ -143,15 +143,15 @@ static void load() {
 static void readbuf() {
   long int i = 0, pt = 0;
   char fnam [STRINGSIZE] = "";
-  puts("read file:");
+  fputs(": ",stdout);
   getstring(fnam);
   if ((fil = fopen(filename, "r"))) {
     while ((tbuf[pt++] = getc(fil)) != EOF && i++ < BUFSIZE - 1);
     tbuf[pt - 1] = '\0';
     fclose(fil);
-    puts("file loaded to buffer");
+    puts("Loaded.");
   } else {
-    puts("buffer loading error");
+    puts("Error");
   }
 }
 
@@ -396,32 +396,29 @@ int main(int argc, char *argv[]) {
       i = 0;
       break;
     //list back
-    case 'c':
+    case 'c': //copy to buffer
       if (!i) {
         i = 1;
       }
       copy(i);
       i = 0;
       break;
-    //copy to buffer
-    case 'd':
+    case 'd': //delete line
       if (!i) {
         i = 1;
       }
       delete (i);
       i = 0;
       break;
-    //delete line
     case 'e': edit(); i = 0; break;
     case 'f': info(); i = 0; break;
-    case 'g':
+    case 'g': //goto line
       if (!i) {
         i = 1;
       }
       gotoline(i);
       i = 0;
       break;
-    //goto line
     case 'i': insert(); i = 0; break;
     case 'j': joinline(); i = 0; break;
     case 'l': if (!i) { i = 1; } list(i); i = 0; break; //list actual line
@@ -437,5 +434,5 @@ int main(int argc, char *argv[]) {
     case 'z': putchar(i); i = 0; break;
     default: i = 0;
     }
-//  system("stty icanon echo");
+  system("stty icanon echo");
 }

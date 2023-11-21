@@ -30,12 +30,21 @@ character, as in Emacs speak.
 key.
 
 For most commands, it is not necessary to hit RET after entering the key, and
-the command letter itself will not be echoed at the terminal.
+the command letter itself will not be echoed at the terminal. Note that this 
+makes the 'q' command very dangerous. It does not ask for confirmation before
+quitting even if you have unsaved changes. Save often.
 
 .B buup
 is a modal editor, with three modes: Command mode, Insert mode, and Edit mode.
 The editor starts in Command mode.
+
 .SS Command Mode
+
+.TP
+.B q
+Exit buup. Do not pass go. Do not collect $200. Just exit without saving,
+asking, confirming or in any way being polite or careful. Be sure you either
+save often or type carefully. 
 
 .TP
 .B RET
@@ -49,7 +58,7 @@ but do not change the current line.
 
 .TP
 .B [n]l
-(Letter 'el' not numeral 'one') Print the current line. With prefix,
+(Letter 'el,' not numeral 'one') Print the current line. With prefix,
 print point and the following n-1 lines, leaving
 the current line as the current line.
 
@@ -102,6 +111,15 @@ the first line found containing the search string. If not
 found, send a message that it was not found and leave point
 as it is.
 
+.TP
+.B n
+Repeat previous search.
+
+.TP
+.B o
+Prompt for a file name and read that file into the current
+buffer beginnning after point.
+
 
 .SS Insert Mode
 
@@ -120,18 +138,15 @@ To exit insert mode, type a period ('.') on a line by itself.
 
 .SS Edit Mode
 
-
 Replace all
 Backlist
 Copy to buffer
 Delete line         Insert new line       saVe buffer as
 Edit line    
-  - Insert string   List line             eXit
-  - Delete string   search Next
-  - Change string   Open file to buffer
+  - Insert string
+  - Delete string   
+  - Change string
   - Split line      Paste buffer
-
-Type number before command to multiple.
 
 Two things are tricky: It's not possible to edit a line directly. Instead the
 line is printed and an "edit string" will be read below. - Everything after an

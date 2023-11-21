@@ -2,13 +2,12 @@ CC=clang
 CCOPT=--pedantic -Wall -Wextra
 
 .PHONY:all
-all:buup doc
+all:buup buup.1
 
 buup:buup.c
 	$(CC) $(CCOPT) -o buup buup.c
 
-.PHONE:doc
-doc:
+buup.1:buup.man
 	groff -Tascii -man buup.man>buup.1
 
 .PHONY:clean
