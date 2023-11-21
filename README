@@ -4,8 +4,8 @@ buup
 THERE ARE STILL SOME SERIOUS BUGS IN BUUP. DO NOT USE.
 
 Buup is a line editor like ed(1) but much smaller and simpler.  It is a single
-short c file with no build dependencies other than a c compiler and stdio.h, and
-with no runtime dependencies other than stty(1).
+short c file with no build dependencies other than a c compiler and a libc, and
+no runtime dependencies other than stty(1).
 
 It is as fork of Dieter Schoppitsch's minimalistic editor, ATTO
 (https://github.com/EvansWinner/atto_line_editor), see which for some more
