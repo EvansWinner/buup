@@ -1,6 +1,8 @@
 buup
 ====
 
+THERE ARE STILL SOME SERIOUS BUGS IN BUUP. DO NOT USE.
+
 Buup is a line editor like ed(1) but much smaller and simpler.  It is a single
 short c file with no build dependencies other than a c compiler and stdio.h.
 
