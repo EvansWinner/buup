@@ -1,4 +1,4 @@
-// buup.c --- simple and tiny line editor. It is a fork of ATTO.
+// buup.c --- simple and tiny line editor
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -114,7 +114,8 @@ static void list(int n) {
 }
 
 //lists from n lines back 2 * n lines
-static void listback(int n){long int pt=p; prev(n+1); list(2*n+1); p=pt;}
+//static void listback(int n){long int pt=p; prev(n+1); list(2*n+1); p=pt;}
+static void listback(int n){long int pt=p; prev(n); list(n+1); p=pt;}
 
 // print some info
 static void info() {

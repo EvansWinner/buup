@@ -1,0 +1,143 @@
+.TH BUUP 1
+
+.SH NAME
+buup \- tiny line editor
+
+.SH SYNOPSIS
+.B buup
+[\fIfile\fI]
+
+.SH DESCRIPTION
+.B buup
+is a bare-bones line editor, somewhat in the spirit of ed(1).  It is based on
+ATTO, by Dieter Schoppitsch (which is itself not to be confused with the Moodle
+editor of the same name, nor with the Emacs clone of the same name). While it
+lacks the two arguably most powerful features of ed(1), namely regular
+expressions, and integration with the shell, it is extremely small, has no
+runtime dependencies and only requires a standard c compiler and library to
+build.
+
+.SS Definitions and Introductory Notes
+In the following:
+
+"\fB[n]\fP" before a command indicates that an integer prefix argument may be
+optionally typed before the command.
+
+"Point," for lack of a better term, is used to mean the line that is set as the
+current working line. It applies to the line as a whole, not to a single
+character, as in Emacs speak.
+
+\fBRET\fP is short for the "return" key, and \fBSPC\fP is short for the "space"
+key.
+
+For most commands, it is not necessary to hit RET after entering the key, and
+the command letter itself will not be echoed at the terminal.
+
+.B buup
+is a modal editor, with three modes: Command mode, Insert mode, and Edit mode.
+The editor starts in Command mode.
+.SS Command Mode
+
+.TP
+.B RET
+Print a blank line
+
+.TP
+.B [n]SPC
+Make the next line point and print it. Useful to scroll
+through the buffer one line at a time. With prefix, print line n,
+but do not change the current line.
+
+.TP
+.B [n]l
+(Letter 'el' not numeral 'one') Print the current line. With prefix,
+print point and the following n-1 lines, leaving
+the current line as the current line.
+
+.TP
+.B [n]+
+Make the next line point. With prefix, go forward n lines.
+
+.TP
+.B [n]b
+Print the line n lines above point, or line 1, if there
+are fewer lines above point than n; then print all intervening
+lines up to point, and then print point. In the usual case, then
+there will be n+1 lines of output.
+
+.TP
+.B i
+Enter insert mode, inserting text after the current line. Type a
+period ('.') on a line by itself to return to Command mode.
+
+.TP
+.B [n]-
+Make the previous line point. With prefix go backward n lines.
+
+.TP
+.B f
+Print some information about the current buffer.
+
+.TP
+.B t
+Print a ruler.
+
+.TP
+.B w
+Write buffer to file. Prompt for filename if the buffer
+is not already associated with a file.
+
+.TP
+.B j
+Concatenate the next line to the end of the current line, deleting
+the next line and leaving the currently line as point.
+
+.TP
+.B [n]g
+Set point to line 1. With prefix, make set point to n.
+
+.TP
+.B s
+Prompt for a search string. When entered, set point to
+the first line found containing the search string. If not
+found, send a message that it was not found and leave point
+as it is.
+
+
+.SS Insert Mode
+
+Enter Insert mode by typing 'i' while in command mode. Once
+in insert mode, anything you type will be entered into the
+current buffer starting after whatever was the current line
+before you entered insert mode.
+
+To make edits to the current line you can use Control+h to
+backspace. Other than that, you're out of luck. You will
+have to exit insert mode and then go into edit mode for that
+line.
+
+To exit insert mode, type a period ('.') on a line by itself.
+
+
+.SS Edit Mode
+
+
+Replace all
+Backlist
+Copy to buffer
+Delete line         Insert new line       saVe buffer as
+Edit line    
+  - Insert string   List line             eXit
+  - Delete string   search Next
+  - Change string   Open file to buffer
+  - Split line      Paste buffer
+
+Type number before command to multiple.
+
+Two things are tricky: It's not possible to edit a line directly. Instead the
+line is printed and an "edit string" will be read below. - Everything after an
+'i' in this string will be inserted in the line. - Everything after an 'd' in
+this string will be deleted in the line. - Everything after an 'c' in this
+string will be changed in the line. - A 's' in this string splits the line.
+Inserting new line(s) after the actual line (command 'i') could be ended with a
+'.' in a line itself.
